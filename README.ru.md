@@ -4,6 +4,8 @@
 
 Передача файлов и текста между устройствами по локальной сети
 
+[Download](https://github.com/sk1fony/ryadom/releases/tag/ryadom)
+
 ## Запуск
 
 Установи [Python 3.10+](https://www.python.org/downloads/), скачай проект и распакуй архив
