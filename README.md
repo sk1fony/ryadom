@@ -4,6 +4,8 @@
 
 Transfer files and text between devices over a local network
 
+[Download](https://github.com/sk1fony/ryadom/releases/tag/ryadom)
+
 ## Run
 
 Install [Python 3.10+](https://www.python.org/downloads/), download the project and unpack it
