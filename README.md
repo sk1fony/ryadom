@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md)
 
-Send files and text between your computer and phone over a local network, without an account or a phone app
+Transfer files and text between devices over a local network
 
 ## Run
 
@@ -14,23 +14,19 @@ Install [Python 3.10+](https://www.python.org/downloads/), download the project 
 | macOS | Run `sh start.command` |
 | Linux | Run `sh start.sh` |
 
-Run commands from the project folder. The first launch needs internet to install the QR library. After that, Ryadom works offline. Keep the terminal open while using it
+Run commands from the project folder. **Keep the terminal open while using Ryadom**
 
 ## Connect
 
 1. Connect your phone and computer to the same local network
-2. Scan the QR code shown on the computer
-3. Enter the six-digit code on your phone
-
-The code changes every 15 seconds. Use **Send / Receive** to exchange files or text. Switch the interface language with **En / Ru**
+2. Scan the QR code
+3. Enter the code on your phone
 
 If the phone cannot connect, check that your VPN allows local network access and the firewall allows Python on private networks
 
 ## Files and text
 
-Files received on the computer are saved to `~/Downloads/Ryadom`. The default limit is **6 GiB per file**
-
-Files shared from the computer are temporary copies. Received files stay after closing Ryadom; text is cleared on shutdown or QR refresh
+Files received on the PC are saved to `~/Downloads/Ryadom`. Default limit: **6 GiB per file**
 
 Refreshing the QR disconnects paired devices. Transfers use local HTTP without encryption, so use a trusted network
 
@@ -40,6 +36,6 @@ Refreshing the QR disconnects paired devices. Transfers use local HTTP without e
 python3 bootstrap.py --port 9000 --storage ./received --max-file-mb 6144
 ```
 
-Use `python` on Windows. Add `--help` for all options
+Use `python` on Windows. All options are available with `--help`
 
 [MIT](LICENSE)
