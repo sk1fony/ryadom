@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><title>Ryadom</title><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/style.css"><script src="/i18n.js" defer></script><script src="/connect.js" defer></script></head>
+<body class="connect-page">
+  <header class="header"><nav class="languages" aria-label="Language"><button type="button" data-language="en" aria-pressed="true">En</button><span aria-hidden="true">/</span><button type="button" data-language="ru" aria-pressed="false">Ru</button></nav></header>
+  <main class="connect-wrap"><h1 data-i18n="Введите код">Enter code</h1><form id="connect-form"><input class="code-input" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required autofocus data-i18n-label="Введите код" aria-label="Enter code" aria-describedby="connect-error"><button class="primary" type="submit" id="connect" data-i18n="Подключиться">Connect</button></form><div id="connect-error" class="form-error" role="status" aria-live="polite"></div></main>
+</body>
+</html>

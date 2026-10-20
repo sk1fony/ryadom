@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f4f4f4">
+  <title>Ryadom</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/i18n.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="/" aria-label="Ryadom"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M5 11h20m-6-6 6 6-6 6M27 23H7m6-6-6 6 6 6" stroke="currentColor" stroke-width="2.2"/></svg><span data-i18n="рядом.">ryadom.</span></a>
+    <div class="header-actions">
+      <div class="connection" role="status"><span id="status-dot" class="dot"></span><span id="connection-text" data-i18n="Подключение…">Connecting…</span></div>
+      <button id="settings" type="button" class="settings-button" data-i18n-label="Подключение" aria-label="Connection" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 17h16M8 4v6m8 4v6" stroke="currentColor" stroke-width="1.5"/></svg></button>
+      <nav class="languages" aria-label="Language"><button type="button" data-language="en" aria-pressed="true">En</button><span aria-hidden="true">/</span><button type="button" data-language="ru" aria-pressed="false">Ru</button></nav>
+    </div>
+  </header>
+  <main id="pairing-view" hidden><div class="pairing-center"><div class="qr-wrap"><img id="waiting-qr" width="224" height="224" data-i18n-alt="QR-код для подключения" alt="Connection QR code"></div><strong id="waiting-code" class="waiting-code" aria-live="off">··· ···</strong><div class="code-timer" role="timer" aria-live="off"><svg class="timer-ring" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle class="timer-track" cx="10" cy="10" r="8"/><circle class="timer-arc" cx="10" cy="10" r="8" pathLength="100" stroke-dasharray="100" stroke-dashoffset="0"/></svg><span id="waiting-countdown"></span></div></div></main>
+  <main id="disconnected-view" hidden><h1 data-i18n="Отсканируйте QR-код повторно">Scan the QR code again</h1></main>
+  <div id="fatal" class="fatal" role="alert" hidden></div>
+  <div class="layout" id="layout" hidden>
+    <main class="main">
+      <div class="page-heading"><h1 data-i18n="Передача">Transfer</h1></div>
+      <div class="modes" role="tablist" data-i18n-label="Направление передачи" aria-label="Transfer direction" id="modes">
+        <button class="mode active" id="mode-send" role="tab" aria-selected="true" aria-controls="workspace" type="button"><span aria-hidden="true">↑</span> <span data-i18n="Отправить">Send</span></button>
+        <button class="mode" id="mode-receive" role="tab" aria-selected="false" aria-controls="workspace" tabindex="-1" type="button"><span aria-hidden="true">↓</span> <span data-i18n="Получить">Receive</span> <span class="count" id="receive-count">0</span></button>
+      </div>
+      <div id="workspace" role="tabpanel" aria-labelledby="mode-send">
+        <div class="type-toolbar">
+          <div class="types" role="tablist" data-i18n-label="Тип данных" aria-label="Content type" id="types">
+            <button class="type active" id="type-files" role="tab" aria-selected="true" aria-controls="content-panel" type="button"><span data-i18n="Файлы">Files</span> <span id="files-count" class="count">0</span></button>
+            <button class="type" id="type-text" role="tab" aria-selected="false" aria-controls="content-panel" tabindex="-1" type="button"><span data-i18n="Текст">Text</span> <span id="texts-count" class="count">0</span></button>
+          </div>
+          <button id="open-folder" class="text-button folder-button" type="button" hidden data-i18n="Открыть папку ↗">Open folder ↗</button>
+        </div>
+        <div id="content-panel" role="tabpanel" aria-labelledby="type-files">
+          <section class="dropzone" id="dropzone" data-i18n-label="Добавление файлов" aria-label="Add files">
+            <svg class="upload-icon" width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 22V5m-6 6 6-6 6 6M6 21v6h20v-6" stroke="currentColor" stroke-width="1.7"/></svg>
+            <div class="drop-title" id="drop-title" data-i18n="Перетащите файлы сюда">Drop files here</div>
+            <button id="choose" class="primary" type="button"><span data-i18n="Выбрать файлы">Choose files</span> <span aria-hidden="true">+</span></button>
+            <input id="file-input" type="file" multiple hidden>
+            <span class="file-limit" id="file-limit"></span>
+          </section>
+          <form id="text-form" class="text-compose" hidden>
+            <label for="text-input" data-i18n="Текст для отправки">Text to send</label>
+            <textarea id="text-input" data-i18n-placeholder="Вставьте ссылку, заметку или другой текст" placeholder="Paste a link, note or other text" rows="6" spellcheck="false"></textarea>
+            <div class="compose-actions"><span id="text-size" class="field-label">0 / 64 KB</span><button id="send-text" class="primary" type="submit" data-i18n="Отправить текст ↑">Send text ↑</button></div>
+          </form>
+          <section id="transfers" class="transfers" aria-labelledby="transfers-title" hidden>
+            <div class="section-line"><h2 id="transfers-title" data-i18n="Передача файлов">File transfer</h2><button id="clear-completed" class="text-button" type="button" data-i18n="Убрать завершённые">Clear finished</button></div>
+            <div id="transfer-list"></div>
+          </section>
+          <div id="empty" class="empty"><span class="empty-index" aria-hidden="true">—</span><p id="empty-title"></p><span id="empty-copy"></span></div>
+          <div id="file-list"></div>
+          <div id="text-list"></div>
+          <div class="file-footnote" id="file-footnote" hidden></div>
+        </div>
+      </div>
+      <footer class="footer"><span id="version">Рядом</span></footer>
+    </main>
+  </div>
+    <dialog id="connection-settings"><button id="close-settings" class="dialog-close text-button" type="button" data-i18n-label="Закрыть" aria-label="Close">×</button>
+      <div class="eyebrow" data-i18n="Подключение">Connection</div>
+      <div class="qr-wrap"><img id="qr" data-i18n-alt="QR-код для подключения" alt="Connection QR code" width="208" height="208"></div>
+      <p class="aside-copy" data-i18n="Отсканируйте QR и введите код на телефоне">Scan the QR and enter the code on your phone</p>
+      <div class="pair-code"><span class="field-label" data-i18n="Код подключения">Connection code</span><strong id="pair-code" data-i18n-label="Код подключения" aria-label="Connection code">··· ···</strong><div class="code-timer settings-timer" role="timer" aria-live="off"><svg class="timer-ring" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle class="timer-track" cx="10" cy="10" r="8"/><circle class="timer-arc" cx="10" cy="10" r="8" pathLength="100" stroke-dasharray="100" stroke-dashoffset="0"/></svg><span id="code-countdown"></span></div></div>
+      <button class="text-button copy-link" id="copy-link" type="button"><span data-i18n="Скопировать ссылку">Copy link</span> <span aria-hidden="true">↗</span></button>
+      <div class="network"><div class="address-label"><label for="address" data-i18n="Адрес компьютера">Computer address</label><button id="toggle-ip" class="eye-button" type="button" aria-label="Hide IP address" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.5"/><path class="eye-slash" d="m4 3 16 18" stroke="currentColor" stroke-width="1.5"/></svg></button></div><select id="address"></select></div>
+      <details class="help"><summary data-i18n="Не получается подключиться?">Can’t connect?</summary><p data-i18n="Сетевая справка">Use the same network. If your VPN blocks local connections, allow LAN access in its settings. On Windows, allow Python through the firewall for private networks. Guest Wi-Fi may isolate devices.</p></details>
+      <button id="rotate" type="button" class="text-button disconnect" data-i18n="Отключить устройства и обновить QR">Disconnect devices and refresh QR</button>
+    </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
